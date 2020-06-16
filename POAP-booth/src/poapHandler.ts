@@ -59,12 +59,14 @@ export async function makeTransaction() {
 
   const poapTokenFactory = await new eth.ContractFactory(rm, poapContract)
   const PoapDelegatedMint = (await poapTokenFactory.at(
-    //ropsten: '0x2f3c23b50396EcB55C73956B069CF04e493bdEf9'
+    //ropsten
+    //'0x2f3c23b50396EcB55C73956B069CF04e493bdEf9'
+    //mainnet
     '0xAac2497174f2Ec4069A98375A67D798db8a05337'
   )) as any
 
   await PoapDelegatedMint.mintToken(event, userId, signature, {
-    from: poapSignerAddress,
+    from: userData.userId,
   }).then(sceneMessageBus.emit('activatePoap', {}))
 
   return
