@@ -39,17 +39,16 @@ export async function callAPI(user: string) {
 }
 
 export async function makeTransaction() {
-  let userId = '0xe2b6024873d218B2E83B462D3658D8D7C3f55a18'
   if (!userData) {
     userData = await fetchUserData()
-    userId = userData.userId
+    userData.userId = '0xe2b6024873d218B2E83B462D3658D8D7C3f55a18'
   }
   if (!userData.hasConnectedWeb3) {
     log('no wallet')
 
     //return
   }
-  let json: serverData = await callAPI(userId)
+  let json: serverData = await callAPI(userData.userId)
   let signature = json.signedCode
   let event = json.event
   let signer = json.signer
@@ -65,7 +64,7 @@ export async function makeTransaction() {
     '0xAac2497174f2Ec4069A98375A67D798db8a05337'
   )) as any
 
-  await PoapDelegatedMint.mintToken(event, userId, signature, {
+  await PoapDelegatedMint.mintToken(event, userData.userId, signature, {
     from: userData.userId,
   }).then(sceneMessageBus.emit('activatePoap', {}))
 
