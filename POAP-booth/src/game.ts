@@ -1,23 +1,37 @@
 //import { callAPI, makeTransaction } from './poapHandler'
 import { Dispenser } from './dispenser'
+import { GuestBook } from './guestbook'
 
 export let sceneMessageBus = new MessageBus()
 
-let POAPBooth = new Dispenser(new GLTFShape('models/POAP_dispenser.glb'), {
-  position: new Vector3(8, 0, 8),
-})
+let POAPBooth = new Dispenser(
+  {
+    position: new Vector3(8, 0, 8),
+  },
+  'test'
+)
 
 sceneMessageBus.on('activatePoap', () => {
   POAPBooth.activate()
 })
 
-// let POAPBooth = new Entity()
-// POAPBooth.addComponent(new Transform()).position = new Vector3(8, 0, 8)
-// POAPBooth.addComponent(new GLTFShape('models/dispenser.glb'))
-// engine.addEntity(POAPBooth)
+let POAPBanner = new Entity()
+POAPBanner.addComponent(new Transform()).position = new Vector3(6, 0, 8)
+POAPBanner.addComponent(new GLTFShape('models/poap/POAP_Banner.glb'))
+engine.addEntity(POAPBanner)
 
-// POAPBooth.addComponent(
-//   new OnPointerDown((e) => {
-//     makeTransaction()
-//   })
-// )
+POAPBanner.addComponent(
+  new OnPointerDown(
+    (e) => {
+      openExternalURL('https://www.poap.xyz/')
+    },
+    { hoverText: 'Learn More' }
+  )
+)
+
+let guestBook = new GuestBook(
+  {
+    position: new Vector3(10, 0, 6),
+  },
+  'test'
+)

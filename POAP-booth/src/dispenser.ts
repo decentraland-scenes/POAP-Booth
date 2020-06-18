@@ -7,19 +7,17 @@ export class Dispenser extends Entity {
   idleAnim = new AnimationState('Idle_POAP', { looping: true })
   buyAnim = new AnimationState('Action_POAP', { looping: false })
   buttonAnim = new AnimationState('Button_Action', { looping: false })
-  id: string
+  eventName: string
   constructor(
-    model: GLTFShape,
     transform: TranformConstructorArgs,
-    wearableName?: string,
-    id?: string
+    eventName: string
 
     //,sound: AudioClip
   ) {
     super()
     engine.addEntity(this)
 
-    this.addComponent(model)
+    this.addComponent(new GLTFShape('models/poap/POAP_dispenser.glb'))
     this.addComponent(new Transform(transform))
 
     this.addComponent(new Animator())
@@ -27,10 +25,10 @@ export class Dispenser extends Entity {
     this.getComponent(Animator).addClip(this.buyAnim)
     this.idleAnim.play()
 
-    this.id = id
+    this.eventName = eventName
 
     let button = new Entity()
-    button.addComponent(new GLTFShape('models/POAP_button.glb'))
+    button.addComponent(new GLTFShape('models/poap/POAP_button.glb'))
     button.addComponent(new Animator())
     button.getComponent(Animator).addClip(this.buttonAnim)
     button.setParent(this)
@@ -40,15 +38,12 @@ export class Dispenser extends Entity {
           button.getComponent(Animator).getClip('Action').stop()
           button.getComponent(Animator).getClip('Action').play()
           sceneMessageBus.emit('activatePoap', {})
-          makeTransaction()
-          //openUI1(wearableName, this)
+          makeTransaction(eventName)
         },
         { hoverText: 'Get Attendance Token' }
       )
     )
     engine.addEntity(button)
-
-    //this.addComponent(new AudioSource(sound))
   }
 
   public activate(): void {
