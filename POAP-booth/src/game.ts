@@ -4,6 +4,17 @@ import { GuestBook } from './guestbook'
 
 export let sceneMessageBus = new MessageBus()
 
+// GUESTBOOK
+
+let guestBook = new GuestBook(
+  {
+    position: new Vector3(10, 0, 6),
+  },
+  'test'
+)
+
+// POAP BOOTH
+
 let POAPBooth = new Dispenser(
   {
     position: new Vector3(8, 0, 8),
@@ -14,6 +25,8 @@ let POAPBooth = new Dispenser(
 sceneMessageBus.on('activatePoap', () => {
   POAPBooth.activate()
 })
+
+// POAP BANNER
 
 let POAPBanner = new Entity()
 POAPBanner.addComponent(new Transform()).position = new Vector3(6, 0, 8)
@@ -29,9 +42,17 @@ POAPBanner.addComponent(
   )
 )
 
-let guestBook = new GuestBook(
-  {
-    position: new Vector3(10, 0, 6),
-  },
-  'test'
+// FLOOR
+
+const entity = new Entity('entity')
+engine.addEntity(entity)
+entity.addComponentOrReplace(
+  new GLTFShape('models/FloorBaseGrass_01/FloorBaseGrass_01.glb')
+)
+entity.addComponentOrReplace(
+  new Transform({
+    position: new Vector3(8, 0, 8),
+    rotation: new Quaternion(0, 0, 0, 1),
+    scale: new Vector3(1, 1, 1),
+  })
 )
