@@ -8,7 +8,7 @@ let guestBook = new GuestBook(
   {
     position: new Vector3(10, 0, 6),
   },
-  'genesis'
+  'test'
 )
 
 // POAP BOOTH
