@@ -2,15 +2,13 @@
 import { Dispenser } from './dispenser'
 import { GuestBook } from './guestbook'
 
-export let sceneMessageBus = new MessageBus()
-
 // GUESTBOOK
 
 let guestBook = new GuestBook(
   {
     position: new Vector3(10, 0, 6),
   },
-  'test'
+  'genesis'
 )
 
 // POAP BOOTH
@@ -19,8 +17,12 @@ let POAPBooth = new Dispenser(
   {
     position: new Vector3(8, 0, 8),
   },
-  'test'
+  'genesis'
 )
+
+// MAKE POAP BOOTH MULTIPLAYER
+
+export let sceneMessageBus = new MessageBus()
 
 sceneMessageBus.on('activatePoap', () => {
   POAPBooth.activate()
@@ -29,7 +31,11 @@ sceneMessageBus.on('activatePoap', () => {
 // POAP BANNER
 
 let POAPBanner = new Entity()
-POAPBanner.addComponent(new Transform()).position = new Vector3(6, 0, 8)
+POAPBanner.addComponent(
+  new Transform({
+    position: new Vector3(6, 0, 8),
+  })
+)
 POAPBanner.addComponent(new GLTFShape('models/poap/POAP_Banner.glb'))
 engine.addEntity(POAPBanner)
 

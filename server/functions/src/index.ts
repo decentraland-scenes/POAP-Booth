@@ -41,7 +41,7 @@ app.post('/add-signature', async (req: any, res: any) => {
   let event = req.query.event
   let signatures = db.collection('Signatures-' + event)
   try {
-    await signatures.doc('/' + Math.floor(Math.random() * 1000) + '/').create({
+    await signatures.doc('/' + newSignature.name + '/').create({
       id: newSignature.id,
       name: newSignature.name,
     })
@@ -81,7 +81,7 @@ app.post('/add-poap-codes', async (req: any, res: any) => {
   let poapEvent = db.collection('POAP-' + event)
   try {
     for (let token of poapCodes) {
-      await poapEvent.doc('/' + Math.floor(Math.random() * 1000) + '/').create({
+      await poapEvent.doc('/' + token.id + '/').create({
         id: token.id,
       })
     }

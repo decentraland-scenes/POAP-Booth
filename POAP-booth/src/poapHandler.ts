@@ -28,6 +28,12 @@ export async function fetchUserData() {
   return data
 }
 
+export async function setUserData() {
+  const data = await getUserData()
+  log(data.displayName)
+  userData = data
+}
+
 export async function callQRAPI(event: string) {
   const url = fireBaseServer + 'get-poap-code/?event=' + event
   try {
@@ -89,8 +95,6 @@ export async function makeTransaction(event: string) {
   }
   if (!userData.hasConnectedWeb3) {
     log('no wallet')
-    /////// HARD CODED  - REMOVE REMOVE !!!!
-    //userData.publicKey = '0xe2b6024873d218B2E83B462D3658D8D7C3f55a18'
     return
   }
   let qrHex: string = await callQRAPI(event)
@@ -120,15 +124,6 @@ export async function makeTransaction(event: string) {
       from: userData.publicKey,
     }
   ).then(sceneMessageBus.emit('activatePoap', {}))
-
-  //   await PoapDelegatedMint.mintToken(
-  //     256,
-  //     '0xe2b6024873d218B2E83B462D3658D8D7C3f55a18',
-  //     '0x7637d165bd894465d467a410d54d0d9aae8bf03353bcc921c6aae917e4a8ac8a2b58bc2134524d4f3b2108874b584fe6b73fe90fedd46619108484dad4dad76e1b',
-  //     {
-  //       from: '0xe2b6024873d218B2E83B462D3658D8D7C3f55a18',
-  //     }
-  //   ).then(sceneMessageBus.emit('activatePoap', {}))
 
   return
 }

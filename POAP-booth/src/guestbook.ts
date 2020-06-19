@@ -1,5 +1,5 @@
 import { openUI } from './ui'
-import { userData, fetchUserData } from './poapHandler'
+import { userData, setUserData } from './poapHandler'
 
 // external servers being used by the project - Please change these to your own if working on something else!
 export let fireBaseServer =
@@ -58,7 +58,7 @@ export async function getGuestBook(event: string) {
 // change data in scoreboard
 export async function signGuestBook(event: string) {
   if (!userData) {
-    userData = await fetchUserData()
+    await setUserData()
   }
   try {
     let url = fireBaseServer + 'add-signature/?event=' + event
