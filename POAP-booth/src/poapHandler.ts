@@ -22,6 +22,12 @@ type signedEventData = {
   event_id: string
 }
 
+let qrHex: string
+
+let secret: eventData
+
+let signature: signedEventData
+
 export async function fetchUserData() {
   const data = await getUserData()
   log(data.displayName)
@@ -97,11 +103,17 @@ export async function makeTransaction(event: string) {
     log('no wallet')
     return
   }
-  let qrHex: string = await callQRAPI(event)
+  if (!qrHex) {
+    qrHex = await callQRAPI(event)
+  }
 
-  let secret: eventData = await getSecret(qrHex)
+  if (!secret) {
+    secret = await getSecret(qrHex)
+  }
 
-  let signature: signedEventData = await getSignedMessage(secret, qrHex)
+  if (!signature) {
+    signature = await getSignedMessage(secret, qrHex)
+  }
 
   log('signature for request ', signature)
 
