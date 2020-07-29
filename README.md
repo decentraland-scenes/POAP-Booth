@@ -38,6 +38,56 @@ Any dependencies are installed and then the CLI will open the scene in a new bro
 
 Learn more about how to build your own scenes in our [documentation](https://docs.decentraland.org/) site.
 
+## Launch and use the server
+
+Each POAP token that is minted must present a claim code, these are handed out manually by the POAP team, please [get in touch with them](poap.xyz) to obtain them.
+
+Once you have these codes, a server must handle them so that the same code isn't reused.
+
+1) Host a server containing the contents of the `/server` folder in this repository. [This tutorial](https://decentraland.org/blog/tutorials/servers-part-2/) can help you achieve that on Firebase, or you can use any other hosting service. 
+
+2) Send a POST request to the server to upload all of the claim codes to the server's DB
+
+```
+<server-address>/add-poap-codes/?event=eventname
+```
+
+Eventname is a unique string that identifies the event.
+The body of the request needs to include all of the claim codes in an array, structured as:
+
+```
+[ {"id": "code1"}, {"id": "code2"}, ...  ]
+```
+
+3) Once those codes are uploaded to the server, you can fetch one at a time with a GET request to:
+```
+<server-address>/get-poap-code/?event=eventname
+```
+Wventname needs to match the event name used in the previous request
+
+> TIP: Once a code is fetched, it's removed from the DB, so don't spend too many of them testing.
+
+4) If that works well, then modify the scene in the `POAP-booth` folder of this repo in the following ways to match your event: 
+
+- In the `poapHanlder.ts` file, change the value of `fireBaseServer` to match your server's address
+- In the `game.ts` file, change the last parameter when initializing the `POAPBooth` object, so that the string matches the `eventname` string you used when uploading the claim codes to the server.
+
+So, for example if you called your event `myevent`
+
+```ts
+let POAPBooth = new Dispenser(
+  {
+    position: new Vector3(8, 0, 8),
+  },
+  'myevent'
+)
+```
+
+> TIP: When running a local preview of this scene with `dcl start`, you won't be able to fetch a POAP, because in preview mode you use a fake random id that won't match the one on your Metamask. You will be able to call a transaction, but the transaction will have an error. Once deployed it should work fine.
+
+
+
+
 ## Copyright info
 
 This scene is protected with a standard Apache 2 licence. See the terms and conditions in the [LICENSE](/LICENSE) file.
