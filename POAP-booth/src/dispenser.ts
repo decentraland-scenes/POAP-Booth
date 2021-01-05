@@ -1,6 +1,6 @@
 // import { openUI1 } from './ui'
 import utils from '../node_modules/decentraland-ecs-utils/index'
-import { makeTransaction } from './poapHandler'
+import { handlePoap } from './poapHandler'
 import { sceneMessageBus } from './game'
 
 export class Dispenser extends Entity {
@@ -33,7 +33,7 @@ export class Dispenser extends Entity {
           button.getComponent(Animator).getClip('Action').stop()
           button.getComponent(Animator).getClip('Action').play()
           sceneMessageBus.emit('activatePoap', {})
-          makeTransaction(eventName)
+          handlePoap(eventName)
         },
         { hoverText: 'Get Attendance Token' }
       )
