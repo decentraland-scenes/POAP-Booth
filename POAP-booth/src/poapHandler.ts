@@ -12,22 +12,6 @@ export let fireBaseServer =
 export let userData: UserData
 export let playerRealm: Realm
 
-type eventData = {
-  secret: string
-  event_id: string
-}
-
-type signedEventData = {
-  signed_message: string
-  event_id: string
-}
-
-let qrHex: string
-
-let secret: eventData
-
-let signature: signedEventData
-
 export async function fetchUserData() {
   const data = await getUserData()
   log(data.displayName)
