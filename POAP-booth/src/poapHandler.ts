@@ -32,6 +32,14 @@ export async function setRealm() {
 }
 
 export async function handlePoap(eventName: string) {
+  if (!userData) {
+    await setUserData()
+  }
+
+  if (!playerRealm) {
+    await setRealm()
+  }
+
   if (userData.hasConnectedWeb3) {
     let poap = await sendpoap(eventName)
     if (poap.success === true) {
