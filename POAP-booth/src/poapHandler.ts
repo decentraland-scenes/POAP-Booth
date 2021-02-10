@@ -1,7 +1,7 @@
 import { getUserData, UserData } from '@decentraland/Identity'
 import { getCurrentRealm, Realm } from '@decentraland/EnvironmentAPI'
 import * as EthereumController from '@decentraland/EthereumController'
-import * as ui from '../node_modules/@dcl/ui-utils/index'
+import * as ui from '@dcl/ui-scene-utils'
 import { PlayCloseSound, PlayCoinSound, PlayOpenSound } from './sounds'
 
 export let ethController = EthereumController

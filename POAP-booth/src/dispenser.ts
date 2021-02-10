@@ -1,5 +1,5 @@
 // import { openUI1 } from './ui'
-import utils from '../node_modules/decentraland-ecs-utils/index'
+import * as utils from '@dcl/ecs-scene-utils'
 import { handlePoap } from './poapHandler'
 import { sceneMessageBus } from './game'
 
