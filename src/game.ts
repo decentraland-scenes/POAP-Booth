@@ -15,7 +15,8 @@ sceneMessageBus.on("activatePoap", () => {
   POAPBooth.activate();
 });
 
-
+// Text above POAP Booth
+poapText()
 // POAP BANNER
 
 let POAPBanner = new Entity()
@@ -35,3 +36,20 @@ POAPBanner.addComponent(
     { hoverText: 'Learn More' }
   )
 )
+
+async function poapText() {
+  let poapUrl = `https://poapapi.dcl.guru/event/${'2369'}`
+          let presponse = await fetch(poapUrl)
+          var poapjson = await presponse.json()
+
+          let poapText = new Entity()
+          poapText.addComponent(new Transform({
+            position: new Vector3(8, 2.75, 8),
+            rotation: Quaternion.Euler(0, -180, 0)
+          }))
+          let text = poapjson.data.name.replace(/-/g, '\n')
+          poapText.addComponent(new TextShape(text))
+          poapText.getComponent(TextShape).fontSize = 1;
+          engine.addEntity(poapText)
+}
+
