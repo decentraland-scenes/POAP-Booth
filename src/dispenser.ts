@@ -93,7 +93,7 @@ export class Dispenser extends Entity {
       let data = await response.json()
       this.clickable = true
       if (response.status == 200) {
-        UI.displayAnnouncement("The POAP was sent to your address", 3)
+        UI.displayAnnouncement("A POAP token is being sent to your wallet", 3)
         sceneMessageBus.emit("activatePoap", {})
       } else {
         UI.displayAnnouncement(`Oops, there was an error: "${data.error}"`, 3)
