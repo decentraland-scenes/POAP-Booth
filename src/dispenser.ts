@@ -69,7 +69,7 @@ export class Dispenser extends Entity {
 
   async makeTransaction(poapServer: string, event: string) {
     const userData = await getUserData()
-    if (!userData.hasConnectedWeb3) {
+    if (!userData || !userData.hasConnectedWeb3) {
       log("no wallet")
       return
     }
