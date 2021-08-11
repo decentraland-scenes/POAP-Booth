@@ -48,6 +48,7 @@ export class Dispenser extends Entity {
       )
     )
     engine.addEntity(button)
+    return this
   }
 
   public activate(): void {
