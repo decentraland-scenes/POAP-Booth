@@ -53,9 +53,6 @@ export class Dispenser extends Entity {
   public activate(): void {
     let anim = this.getComponent(Animator)
 
-    anim.getClip("Idle_POAP").stop()
-    anim.getClip("Action_POAP").stop()
-
     anim.getClip("Action_POAP").play()
 
     this.addComponentOrReplace(
@@ -69,7 +66,7 @@ export class Dispenser extends Entity {
 
   async makeTransaction(poapServer: string, event: string) {
     const userData = await getUserData()
-    if (!userData.hasConnectedWeb3) {
+    if (!userData || !userData.hasConnectedWeb3) {
       log("no wallet")
       return
     }
