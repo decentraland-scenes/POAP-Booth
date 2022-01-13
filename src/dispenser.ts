@@ -4,6 +4,7 @@ import { sceneMessageBus } from './messageBus'
 
 import { getUserData } from '@decentraland/Identity'
 import { getCurrentRealm } from '@decentraland/EnvironmentAPI'
+import { PlayCloseSound, PlayCoinSound } from './sounds'
 
 export class Dispenser extends Entity {
   idleAnim = new AnimationState('Idle_POAP', { looping: true })
@@ -91,6 +92,7 @@ export class Dispenser extends Entity {
     // no wallet
     if (!userData || !userData.hasConnectedWeb3) {
       log('no wallet')
+      PlayCloseSound()
 
       let mmPrompt = new UI.CustomPrompt()
 
@@ -116,6 +118,7 @@ export class Dispenser extends Entity {
         100,
         -100,
         () => {
+          PlayCloseSound()
           mmPrompt.hide()
         },
         UI.ButtonStyles.F
@@ -125,6 +128,7 @@ export class Dispenser extends Entity {
 
     // already attempted
     if (this.alreadyAttempted) {
+      PlayCloseSound()
       let prompt = new UI.CustomPrompt()
       prompt.addText('Already attempted', 0, 120, Color4.Red(), 24)
 
@@ -152,6 +156,7 @@ export class Dispenser extends Entity {
         -100,
         () => {
           prompt.hide()
+          PlayCloseSound()
         },
         UI.ButtonStyles.E
       )
@@ -189,6 +194,7 @@ export class Dispenser extends Entity {
 
         sceneMessageBus.emit('activatePoap', {})
       } else {
+        PlayCloseSound()
         UI.displayAnnouncement(`Oops, there was an error: "${data.error}"`, 3)
       }
     } catch {
@@ -206,6 +212,7 @@ function viewSuccessMessage(
   imageSizeX: number,
   imageSizeY: number
 ) {
+  PlayCoinSound()
   let thumbTexture = new Texture(image, { hasAlpha: true })
 
   let name = new UIText(UI.canvas)

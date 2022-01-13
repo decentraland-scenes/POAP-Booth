@@ -11,22 +11,11 @@
     "ecs:install-next": "npm install --save-dev decentraland-ecs@next"
   },
   "devDependencies": {
-<<<<<<< HEAD:POAP-booth/package.json
-    "decentraland-ecs": "^6.6.4-20210209210831.commit-8167f94"
-  },
-  "dependencies": {
-    "@dcl/ecs-scene-utils": "^1.6.1",
-    "@dcl/ui-scene-utils": "^1.7.1",
-    "cors": "^2.8.5",
-    "eth-connect": "^4.0.2",
-    "express": "^4.17.1"
-=======
     "decentraland-ecs": "^6.7.0"
   },
   "dependencies": {
     "@dcl/ecs-scene-utils": "^1.7.2",
     "@dcl/ui-scene-utils": "^1.8.1"
->>>>>>> new-booth:package.json
   },
   "bundleDependencies": [
     "@dcl/ecs-scene-utils",
