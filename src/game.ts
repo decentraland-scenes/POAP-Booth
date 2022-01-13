@@ -1,6 +1,5 @@
 import { Dispenser } from './dispenser'
-
-export let sceneMessageBus = new MessageBus()
+import { sceneMessageBus } from './messageBus'
 
 let POAPBooth = new Dispenser(
   {

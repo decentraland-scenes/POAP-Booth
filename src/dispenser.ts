@@ -1,6 +1,6 @@
 import * as utils from '@dcl/ecs-scene-utils'
 import * as UI from '@dcl/ui-scene-utils'
-import { sceneMessageBus } from './game'
+import { sceneMessageBus } from './messageBus'
 
 import { getUserData } from '@decentraland/Identity'
 import { getCurrentRealm } from '@decentraland/EnvironmentAPI'
