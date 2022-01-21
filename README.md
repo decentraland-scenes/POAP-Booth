@@ -1,6 +1,6 @@
-# POAP Booth and Guestbook
+# POAP Booth
 
-A simple scene with an interactive booth that hands out POAP tokens to certify the player's attendance to an event. It also includes a guestbook that can be signed.
+A simple scene with an interactive booth that hands out POAP tokens to certify the player's attendance to an event.
 
 ![](screenshot/screenshot.png)
 
