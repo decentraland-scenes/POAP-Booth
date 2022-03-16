@@ -11,6 +11,7 @@
     "ecs:install-next": "npm install --save-dev decentraland-ecs@next"
   },
   "devDependencies": {
+    "@dcl/eslint-config": "^1.0.1",
     "decentraland-ecs": "^6.7.0"
   },
   "dependencies": {
