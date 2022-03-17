@@ -11,7 +11,7 @@ This scene shows you:
 - How to send requests to an API
 - How to use the messagebus to sync events between players
 
-This scene connects to a server that stores the POAP codes to be claimed.
+> Important: This scene connects to a server that stores the POAP codes to be claimed. See [Hand out POAP Tokens](https://docs.decentraland.org/development-guide/poap-tokens/) for instructions for how to set up this server.
 
 When a POAP code is redeemed, the scene then sends a series of requests that include this code and the player's public address to servers from the POAP project, these return a cryptographic signed message. This message can then be used to call the POAP contract to mint a new POAP token that is sent to the player's wallet.
 
@@ -35,54 +35,34 @@ $:  dcl start
 
 Any dependencies are installed and then the CLI opens the scene in a new browser tab.
 
+If you click on the booth, this will send a request to attempt to claim a POAP token to a server. This request will fail the server's validations if you run the scene on a local preview. Only requests performed from inside Decentraland are allowed to work.
+
 Learn more about how to build your own scenes in our [documentation](https://docs.decentraland.org/) site.
 
 ## Set up an event
 
-Each POAP token that is minted must present a claim code, these are handed out manually by the POAP team, please [get in touch with them](poap.xyz) to obtain claim codes for your event.
+Each copy of a POAP token that is minted must present a single-use claim code, these are handed out by the POAP team when creating an event. A Decentraland POAP server acts as an intermediary to assign a unique claim code to each player, this server also requests a token using that claim code on behalf of the player.
 
-Once you have these claim codes, a server must handle them so that the same claim code isn't reused.
+See [Hand out POAP Tokens](https://docs.decentraland.org/development-guide/poap-tokens/) for instructions on how to set up the event and the Decentraland POAP sever.
 
-<!--
-1. Host a server containing the contents of the `/server` folder in this repository. [This tutorial](https://decentraland.org/blog/tutorials/servers-part-2/) can help you achieve that on Firebase, or you can use any other hosting service.
+## Set up the scene
 
-2. Send a POST request to the server to upload all of the claim codes to the server's DB
+Once the event and the Decentraland POAP server are set up, modify the `game.ts` file in this repo in the following ways, when initializing the `POAPBooth` object, to match your event:
 
-```
-<server-address>/add-poap-codes/?event=eventname
-```
+- Change the third parameter, `eventUUID`, so that the string matches the `uuid` string that was returned by the Decentraland POAP server when registering the event. 
+- Change the fourth parameter, `UIdisplayName` to the name you want the UI to display when the sueccess message is displayed.
 
-Eventname is a unique string that identifies the event.
-The body of the request needs to include all of the claim codes in an array, structured as:
-
-```
-[ {"id": "code1"}, {"id": "code2"}, ...  ]
-```
-
-3. Once those codes are uploaded to the server, you can fetch one at a time with a GET request to:
-
-```
-<server-address>/get-poap-code/?event=eventname
-```
-
-`eventname` needs to match the event name used in the previous request
-
-> TIP: Once a code is fetched, it's removed from the DB, so don't spend too many of them testing.
--->
-
-If that works well, then modify the scene in the `POAP-booth` folder of this repo in the following ways to match your event:
-
-- In the `poapHanlder.ts` file, change the value of `poapapi.dcl.guru` to match your server's address
-- In the `game.ts` file, change the last parameter when initializing the `POAPBooth` object, so that the string matches the `eventname` string you used when uploading the claim codes to the server.
-
-So, for example if you called your event `myevent`
+So, for example if your scene is called `My Event` and the Decentraland POAP server assigned you a UUID of '123456789-1234-1234-1234-123456789123'
 
 ```ts
-let POAPBooth = new Dispenser(
+const POAPBooth = new Dispenser(
   {
     position: new Vector3(8, 0, 8),
+    rotation: Quaternion.Euler(0, 0, 0)
   },
-  'myevent'
+  'poap-api.decentraland.org',
+  '123456789-1234-1234-1234-123456789123'
+  `My Event`
 )
 ```
 
