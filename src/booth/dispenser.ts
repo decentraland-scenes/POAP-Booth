@@ -56,7 +56,7 @@ export class Dispenser extends Entity {
     button.addComponent(
       new OnPointerDown(
         (e) => {
-          button.getComponent(Animator).getClip('Action').play()
+          button.getComponent(Animator).getClip('Button_Action').play()
           //sceneMessageBus.emit('activatePoap', {})
           void this.makeTransaction()
         },
