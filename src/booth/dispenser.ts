@@ -13,7 +13,7 @@ export class Dispenser extends Entity {
   eventUUID: string
   alreadyAttempted: boolean = false
   timeToClickable: number = 0
-  UIdisplayName: string | null = null
+  //   UIdisplayName: string | null = null
   serverURL: string
 
   /**
@@ -26,13 +26,13 @@ export class Dispenser extends Entity {
    */
   constructor(
     transform: TranformConstructorArgs,
-    poapServer: string,
     eventUUID: string,
-    UIdisplayName?: string
+    // UIdisplayName?: string,
+    poapServer?: string
   ) {
     super()
     engine.addEntity(this)
-    this.serverURL = poapServer
+    this.serverURL = poapServer ? poapServer : 'poap-api.decentraland.org'
     this.eventUUID = eventUUID
 
     this.addComponent(new GLTFShape('models/poap/POAP_dispenser.glb'))
@@ -65,7 +65,7 @@ export class Dispenser extends Entity {
     )
     engine.addEntity(button)
 
-    if (UIdisplayName) this.UIdisplayName = UIdisplayName
+    // if (UIdisplayName) this.UIdisplayName = UIdisplayName
 
     sceneMessageBus.on('activatePoap', () => {
       this.activate()
@@ -92,7 +92,7 @@ export class Dispenser extends Entity {
     const captchaUUIDQuery = await signedFetch(
       `https://${this.serverURL}/captcha`,
       {
-        method: 'POST'
+        method: 'POST',
       }
     )
     const json = JSON.parse(captchaUUIDQuery.text)
@@ -135,7 +135,7 @@ export class Dispenser extends Entity {
       log(json)
       if (response.status == 200) {
         boothUI.viewSuccessMessage(
-          this.UIdisplayName ? this.UIdisplayName : json.data.event.name,
+          json.data.event.name,
           json.data.event.image_url,
           1024,
           1024
@@ -161,7 +161,7 @@ export class Dispenser extends Entity {
       }
     } catch {
       this.alreadyAttempted = false
-      log('error fetching from POAP server ', this.serverURL)
+      log('Error fetching from POAP server ', this.serverURL)
     }
 
     return
@@ -177,8 +177,8 @@ export class Dispenser extends Entity {
           address: userData.publicKey,
           catalyst: realm.domain,
           room: realm.room,
-          captcha: captchaResult
-        })
+          captcha: captchaResult,
+        }),
       }
     )
     return response

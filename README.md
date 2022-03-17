@@ -47,22 +47,19 @@ See [Hand out POAP Tokens](https://docs.decentraland.org/development-guide/poap-
 
 ## Set up the scene
 
-Once the event and the Decentraland POAP server are set up, modify the `game.ts` file in this repo in the following ways, when initializing the `POAPBooth` object, to match your event:
+Once the event and the Decentraland POAP server are set up, modify the `game.ts` file in this repo, when initializing the `POAPBooth` object, to match your event:
 
-- Change the third parameter, `eventUUID`, so that the string matches the `uuid` string that was returned by the Decentraland POAP server when registering the event. 
-- Change the fourth parameter, `UIdisplayName` to the name you want the UI to display when the sueccess message is displayed.
+Change the second parameter, `eventUUID`, so that the string matches the `uuid` string that was returned by the Decentraland POAP server when registering the event.
 
-So, for example if your scene is called `My Event` and the Decentraland POAP server assigned you a UUID of '123456789-1234-1234-1234-123456789123'
+So, for example if the Decentraland POAP server assigned you a UUID of `123456789-1234-1234-1234-123456789123`, your `game.ts` file should look like this:
 
 ```ts
 const POAPBooth = new Dispenser(
   {
     position: new Vector3(8, 0, 8),
-    rotation: Quaternion.Euler(0, 0, 0)
+    rotation: Quaternion.Euler(0, 0, 0),
   },
-  'poap-api.decentraland.org',
   '123456789-1234-1234-1234-123456789123'
-  `My Event`
 )
 ```
 
