@@ -1,2 +1,4 @@
-node_modules/
-bin/
+package-lock.json
+*.js
+node_modules
+bin/ 
