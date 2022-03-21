@@ -9,77 +9,68 @@ import { signedFetch } from '@decentraland/SignedFetch'
 
 export const sceneMessageBus = new MessageBus()
 
-export class Dispenser extends Entity {
-  eventUUID: string
-  alreadyAttempted: boolean = false
-  timeToClickable: number = 0
-  //   UIdisplayName: string | null = null
-  serverURL: string
+/**
+ *
+ * @param {TranformConstructorArgs} transform position, rotation and scale of the booth
+ * @param {string} poapServer server to use
+ * @param {string} eventUUID ID of the event
+ *
+ */
+export function createDispenser(
+  transform: TranformConstructorArgs,
+  eventUUID: string,
+  poapServer?: string
+) {
+  const serverURL: string = poapServer
+    ? poapServer
+    : 'poap-api.decentraland.org'
 
-  /**
-   *
-   * @param {TranformConstructorArgs} transform position, rotation and scale of the booth
-   * @param {string} poapServer server to use
-   * @param {string} eventUUID ID of the event
-   * @param {string} UIdisplayName (Optional) Name to display on UI when poap is claimed. By default it uses the name provided on poap.xyz
-   *
-   */
-  constructor(
-    transform: TranformConstructorArgs,
-    eventUUID: string,
-    // UIdisplayName?: string,
-    poapServer?: string
-  ) {
-    super()
-    engine.addEntity(this)
-    this.serverURL = poapServer ? poapServer : 'poap-api.decentraland.org'
-    this.eventUUID = eventUUID
+  let alreadyAttempted: boolean = false
 
-    this.addComponent(new GLTFShape('models/poap/POAP_dispenser.glb'))
-    this.addComponent(new Transform(transform))
+  const entity = new Entity()
+  engine.addEntity(entity)
+  eventUUID = eventUUID
 
-    const idleAnim = new AnimationState('Idle_POAP', { looping: true })
-    this.addComponent(new Animator())
-    this.getComponent(Animator).addClip(idleAnim)
-    this.getComponent(Animator).addClip(
-      new AnimationState('Action_POAP', { looping: false })
+  entity.addComponent(new GLTFShape('models/poap/POAP_dispenser.glb'))
+  entity.addComponent(new Transform(transform))
+
+  const idleAnim = new AnimationState('Idle_POAP', { looping: true })
+  entity.addComponent(new Animator())
+  entity.getComponent(Animator).addClip(idleAnim)
+  entity
+    .getComponent(Animator)
+    .addClip(new AnimationState('Action_POAP', { looping: false }))
+  idleAnim.play()
+
+  const button = new Entity()
+  button.addComponent(new GLTFShape('models/poap/POAP_button.glb'))
+  button.addComponent(new Animator())
+  button
+    .getComponent(Animator)
+    .addClip(new AnimationState('Button_Action', { looping: false }))
+  button.setParent(entity)
+  button.addComponent(
+    new OnPointerDown(
+      (_e) => {
+        button.getComponent(Animator).getClip('Button_Action').play()
+        //sceneMessageBus.emit('activatePoap', {})
+        void makeTransaction()
+      },
+      { hoverText: 'Get Attendance Token' }
     )
-    idleAnim.play()
+  )
+  engine.addEntity(button)
 
-    const button = new Entity()
-    button.addComponent(new GLTFShape('models/poap/POAP_button.glb'))
-    button.addComponent(new Animator())
-    button
-      .getComponent(Animator)
-      .addClip(new AnimationState('Button_Action', { looping: false }))
-    button.setParent(this)
-    button.addComponent(
-      new OnPointerDown(
-        (e) => {
-          button.getComponent(Animator).getClip('Button_Action').play()
-          //sceneMessageBus.emit('activatePoap', {})
-          void this.makeTransaction()
-        },
-        { hoverText: 'Get Attendance Token' }
-      )
-    )
-    engine.addEntity(button)
+  sceneMessageBus.on('activatePoap', () => {
+    activate()
+  })
 
-    // if (UIdisplayName) this.UIdisplayName = UIdisplayName
-
-    sceneMessageBus.on('activatePoap', () => {
-      this.activate()
-    })
-
-    return this
-  }
-
-  public activate(): void {
-    const anim = this.getComponent(Animator)
+  function activate(): void {
+    const anim = entity.getComponent(Animator)
 
     anim.getClip('Action_POAP').play()
 
-    this.addComponentOrReplace(
+    entity.addComponentOrReplace(
       new utils.Delay(4000, () => {
         anim.getClip('Action_POAP').stop()
 
@@ -88,18 +79,15 @@ export class Dispenser extends Entity {
     )
   }
 
-  async getCaptcha(): Promise<string> {
-    const captchaUUIDQuery = await signedFetch(
-      `https://${this.serverURL}/captcha`,
-      {
-        method: 'POST',
-      }
-    )
+  async function getCaptcha(): Promise<string> {
+    const captchaUUIDQuery = await signedFetch(`https://${serverURL}/captcha`, {
+      method: 'POST'
+    })
     const json = JSON.parse(captchaUUIDQuery.text)
     return json.data.uuid
   }
 
-  async makeTransaction() {
+  async function makeTransaction() {
     const userData = await getUserData()
 
     // no wallet
@@ -112,28 +100,28 @@ export class Dispenser extends Entity {
     }
 
     // already attempted
-    if (this.alreadyAttempted) {
+    if (alreadyAttempted) {
       PlayCloseSound()
       boothUI.alreadyClaimed()
       return
     }
 
-    this.alreadyAttempted = true
+    alreadyAttempted = true
     const realm = await getCurrentRealm()
 
     try {
-      const captchaUUID = await this.getCaptcha()
-      const captchaResult = await boothUI.captcha(this.serverURL, captchaUUID)
-      if (captchaResult == undefined) {
-        this.alreadyAttempted = false
+      const captchaUUID = await getCaptcha()
+      const captchaResult = await boothUI.captcha(serverURL, captchaUUID)
+      if (captchaResult === undefined) {
+        alreadyAttempted = false
         return
       }
-      const response = await this.claimCall(captchaResult, userData, realm)
+      const response = await claimCall(captchaResult, userData, realm)
       log(response)
       log(response.status)
       const json = await response.json()
       log(json)
-      if (response.status == 200) {
+      if (response.status === 200) {
         boothUI.viewSuccessMessage(
           json.data.event.name,
           json.data.event.image_url,
@@ -145,13 +133,13 @@ export class Dispenser extends Entity {
       } else {
         PlayCloseSound()
         switch (json.error) {
-          case 'Address already claimed a code for this event':
-            UI.displayAnnouncement(`You already claimed this event`, 3)
+          case 'Address already claimed a code for entity event':
+            UI.displayAnnouncement(`You already claimed entity event`, 3)
 
             break
 
           default:
-            this.alreadyAttempted = false
+            alreadyAttempted = false
             UI.displayAnnouncement(
               `Oops, there was an error: "${json.error}"`,
               3
@@ -160,27 +148,30 @@ export class Dispenser extends Entity {
         }
       }
     } catch {
-      this.alreadyAttempted = false
-      log('Error fetching from POAP server ', this.serverURL)
+      alreadyAttempted = false
+      log('Error fetching from POAP server ', serverURL)
     }
 
     return
   }
 
-  async claimCall(captchaResult: string, userData: UserData, realm: Realm) {
-    const response = await fetch(
-      `https://${this.serverURL}/claim/${this.eventUUID}`,
-      {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify({
-          address: userData.publicKey,
-          catalyst: realm.domain,
-          room: realm.room,
-          captcha: captchaResult,
-        }),
-      }
-    )
+  async function claimCall(
+    captchaResult: string,
+    userData: UserData,
+    realm: Realm
+  ) {
+    const response = await fetch(`https://${serverURL}/claim/${eventUUID}`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({
+        address: userData.publicKey,
+        catalyst: realm.domain,
+        room: realm.room,
+        captcha: captchaResult
+      })
+    })
     return response
   }
+
+  return entity
 }
