@@ -133,8 +133,8 @@ export function createDispenser(
       } else {
         PlayCloseSound()
         switch (json.error) {
-          case 'Address already claimed a code for entity event':
-            UI.displayAnnouncement(`You already claimed entity event`, 3)
+          case 'Address already claimed a code for this event':
+            UI.displayAnnouncement(`You already claimed this event`, 3)
 
             break
 
