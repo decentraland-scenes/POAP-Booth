@@ -112,7 +112,7 @@ export function createDispenser(
     try {
       const captchaUUID = await getCaptcha()
       const captchaResult = await boothUI.captcha(serverURL, captchaUUID)
-      if (captchaResult == undefined) {
+      if (captchaResult === undefined) {
         alreadyAttempted = false
         return
       }
@@ -121,7 +121,7 @@ export function createDispenser(
       log(response.status)
       const json = await response.json()
       log(json)
-      if (response.status == 200) {
+      if (response.status === 200) {
         boothUI.viewSuccessMessage(
           json.data.event.name,
           json.data.event.image_url,

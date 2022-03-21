@@ -1,22 +1,6 @@
 {
-  "env": {
-    "es2021": true,
-    "node": true
-  },
-  "extends": "@dcl/eslint-config",
-  "parser": "@typescript-eslint/parser",
+  "extends": "@dcl/eslint-config/sdk",
   "parserOptions": {
-    "project": [
-      "tsconfig.json",
-      "test/tsconfig.json"
-    ],
-    "ecmaVersion": 13,
-    "sourceType": "module"
-  },
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "rules": {
-    "max-len": [1, { "code": 160 }]
+    "project": ["tsconfig.json"]
   }
 }
