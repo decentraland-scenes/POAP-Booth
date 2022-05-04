@@ -8,6 +8,7 @@ import { PlayCloseSound } from './sounds'
 import { signedFetch } from '@decentraland/SignedFetch'
 
 export const sceneMessageBus = new MessageBus()
+const timeDelay = 5 * 60 * 1000 // Delay before being able to claim a POAP in milliseconds
 
 /**
  *
@@ -21,6 +22,7 @@ export function createDispenser(
   eventUUID: string,
   poapServer?: string
 ) {
+  const createdTime = new Date()
   const serverURL: string = poapServer
     ? poapServer
     : 'poap-api.decentraland.org'
@@ -99,8 +101,15 @@ export function createDispenser(
       return
     }
 
-    // already attempted
+    // 5 minutes timer before claiming
+    if (+createdTime > +new Date() - timeDelay) {
+      PlayCloseSound()
+      boothUI.timerBeforeClaim(createdTime, timeDelay)
+      return
+    }
+
     if (alreadyAttempted) {
+      // already attempted
       PlayCloseSound()
       boothUI.alreadyClaimed()
       return
