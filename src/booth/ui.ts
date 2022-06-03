@@ -4,7 +4,7 @@ import { PlayCloseSound, PlayCoinSound } from './sounds'
 
 export function timerBeforeClaim(createdTime: Date, delay: number) {
   const mmPrompt = new UI.CustomPrompt(undefined, 450, 200)
-  const timeRemaining = (+new Date() + delay - +createdTime) / 1000
+  const timeRemaining = (+createdTime - +new Date() + delay) / 1000
   log(timeRemaining)
   const minutes = Math.floor(timeRemaining / 60)
   const seconds = Math.floor(timeRemaining - minutes * 60)
