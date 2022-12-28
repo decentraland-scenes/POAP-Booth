@@ -85,6 +85,9 @@ export function createDispenser(
     const captchaUUIDQuery = await signedFetch(`https://${serverURL}/captcha`, {
       method: 'POST'
     })
+    
+    captchaUUIDQuery.text = "" + captchaUUIDQuery.text
+    
     const json = JSON.parse(captchaUUIDQuery.text)
     return json.data.uuid
   }
